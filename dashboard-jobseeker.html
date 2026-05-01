@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>TalentTrack |  Dashboard</title>
+  <!-- Google Fonts + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f7f9fc;
+      color: #1e293b;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    /* DARK MODE */
+    body.dark {
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    body.dark .navbar,
+    body.dark .sidebar,
+    body.dark .card,
+    body.dark .job-card,
+    body.dark .stat-card,
+    body.dark .profile-card,
+    body.dark .skill-card,
+    body.dark .kanban-column {
+      background: #1e293b;
+      border-color: #334155;
+      color: #e2e8f0;
+    }
+
+    body.dark .input-field,
+    body.dark .filter-select {
+      background: #334155;
+      border-color: #475569;
+      color: #f1f5f9;
+    }
+
+    /* Sticky Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      z-index: 1100;
+      border-bottom: 1px solid #e2e8f0;
+      transition: all 0.2s;
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 2rem;
+    }
+
+    .logo {
+      font-size: 1.7rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #2563eb, #1e40af);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      color: #334155;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #2563eb;
+    }
+
+    .dark-mode-toggle {
+      background: #eef2ff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* Dashboard Layout */
+    .dashboard-wrapper {
+      display: flex;
+      min-height: calc(100vh - 65px);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: white;
+      border-right: 1px solid #e2e8f0;
+      padding: 2rem 1rem;
+      position: sticky;
+      top: 65px;
+      height: calc(100vh - 65px);
+      overflow-y: auto;
+      transition: transform 0.3s ease;
+      z-index: 100;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+    }
+
+    .sidebar-nav li {
+      margin-bottom: 0.3rem;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.7rem 1rem;
+      border-radius: 16px;
+      text-decoration: none;
+      font-weight: 500;
+      color: #475569;
+      transition: all 0.2s;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+      background: #eef2ff;
+      color: #2563eb;
+    }
+
+    /* Main content */
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+      overflow-x: auto;
+    }
+
+    /* Cards */
+    .card, .job-card, .stat-card, .skill-card, .kanban-column, .profile-card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.2rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+      border: 1px solid #eef2f6;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .job-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px -12px rgba(0,0,0,0.1);
+    }
+
+    .grid-2, .jobs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .match-score {
+      background: #dcfce7;
+      color: #15803d;
+      padding: 0.2rem 0.7rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      background: #e2e8f0;
+      border-radius: 20px;
+      height: 8px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+
+    .progress-fill {
+      background: #2563eb;
+      height: 100%;
+      border-radius: 20px;
+      transition: width 0.5s;
+    }
+
+    .kanban-board {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .kanban-column {
+      min-width: 230px;
+      background: #f8fafc;
+    }
+
+    .kanban-item {
+      background: white;
+      border-radius: 16px;
+      padding: 0.6rem;
+      margin-bottom: 0.6rem;
+      font-size: 0.85rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .btn-sm {
+      background: #f1f5f9;
+      border: none;
+      padding: 0.3rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      cursor: pointer;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
+      z-index: 2000;
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    /* Mobile */
+    .hamburger {
+      display: none;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    @media (max-width: 820px) {
+      .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 65px;
+        transition: left 0.3s;
+        z-index: 1050;
+      }
+      .sidebar.open {
+        left: 0;
+      }
+      .hamburger {
+        display: block;
+      }
+      .nav-links {
+        display: none;
+      }
+      .main-content {
+        padding: 1rem;
+      }
+    }
+    /* DARK MODE FIXES */
+body.dark input,
+body.dark textarea,
+body.dark select {
+  background: #334155;
+  color: #f1f5f9;
+  border: 1px solid #475569;
+}
+
+body.dark .kanban-item {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+
+body.dark .btn-sm {
+  background: #334155;
+  color: #f1f5f9;
+}
+
+body.dark .btn-primary {
+  background: #3b82f6;
+}
+
+body.dark .progress-bar {
+  background: #334155;
+}
+
+body.dark .progress-fill {
+  background: #3b82f6;
+}
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="logo">TalentTrack</div>
+     <ul class="nav-links" id="navLinks">
+         <li><a href="index.html">Home</a></li>
+        <li><a href="jobs.html">Jobs</a></li>
+        <li><a href="internships.html">Internships</a></li>
+        <li><a href="companies.html">Companies</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="help.html">Help</a></li>
+        <li><a href="feedback.html">Feedback</a></li>
+        <li><a href="login.html" class="login-link">Login</a></li>
+        <li><a href="signup.html" class="signup-link">Sign Up</a></li>
+      </ul>
+    <div style="display: flex; gap: 12px;">
+      <button id="darkModeToggle" class="dark-mode-toggle"><i class="fas fa-moon"></i> Dark mode</button>
+      <button id="mobileMenuBtn" class="hamburger"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</nav>
+
+<div class="dashboard-wrapper">
+  <aside class="sidebar" id="sidebar">
+    <ul class="sidebar-nav" id="sidebarNav">
+      <li><a href="#" data-view="home"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="#" data-view="jobs"><i class="fas fa-search"></i> Find Jobs</a></li>
+      <li><a href="#" data-view="saved"><i class="fas fa-bookmark"></i> Saved Jobs</a></li>
+      <li><a href="#" data-view="applications"><i class="fas fa-chart-line"></i> Applications </a></li>
+      <li><a href="#" data-view="resume"><i class="fas fa-file-alt"></i>Resume Builder</a></li>
+      <li><a href="#" data-view="tests"><i class="fas fa-tasks"></i> Mock Tests</a></li>
+    
+      <li><a href="#" data-view="insights"><i class="fas fa-lightbulb"></i> Career Insights</a></li>
+      <li><a href="#" data-view="profile"><i class="fas fa-user-cog"></i> Profile Settings</a></li>
+      <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </aside>
+  <main class="main-content" id="mainContent"></main>
+</div>
+<div id="toastMessage" class="toast"></div>
+
+<script>
+  // ----------------------------- AUTH CHECK -----------------------------
+  function checkAuth() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const role = localStorage.getItem('userRole');
+    if (!isLoggedIn || role !== 'jobseeker') {
+      // Show demo login overlay
+      showLoginOverlay();
+      return false;
+    }
+    return true;
+  }
+
+  function showLoginOverlay() {
+    document.getElementById('mainContent').innerHTML = `
+      <div style="display:flex; justify-content:center; align-items:center; min-height:60vh;">
+        <div class="card" style="max-width:400px; text-align:center;">
+          <i class="fas fa-user-circle fa-3x" style="color:#2563eb"></i>
+          <h2 style="margin:1rem 0">Demo Job Seeker Login</h2>
+          <p>Click below to continue as Job Seeker (demo session)</p>
+          <button id="demoLoginBtn" class="btn-primary" style="margin-top:1rem">Login as Job Seeker</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('demoLoginBtn')?.addEventListener('click', () => {
+      // setup demo session
+      const demoUser = { name: " User", role: "Nil", skills: "Nil" };
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userRole', 'jobseeker');
+      localStorage.setItem('currentUserEmail', 'demo@talenttrack.com');
+      // save user profile
+      if (!localStorage.getItem('userProfile')) {
+        localStorage.setItem('userProfile', JSON.stringify(demoUser));
+      }
+      initDataStorage();
+      initDashboard();
+    });
+  }
+
+  // ----------------------------- DATA INIT -----------------------------
+  function initDataStorage() {
+    if (!localStorage.getItem('postedJobs')) {
+  localStorage.setItem('postedJobs', JSON.stringify([
+    { id: 1, title: "Frontend Developer", company: "DemoCorp", location: "Remote", salary: "₹8L", category: "Remote" }
+  ]));
+}
+    if (!localStorage.getItem('jobs')) {
+      const sampleJobs = [
+        { id: 1, title: "Frontend Developer", company: "Stripe", location: "Remote", salary: "$120k", category: "Remote" },
+        { id: 2, title: "Data Scientist", company: "Netflix", location: "Los Gatos", salary: "$145k", category: "Hybrid" },
+        { id: 3, title: "Product Manager", company: "Atlassian", location: "NYC", salary: "$130k", category: "Onsite" },
+        { id: 4, title: "Backend Engineer", company: "Spotify", location: "Stockholm", salary: "$110k", category: "Remote" },
+        { id: 5, title: "UX Designer", company: "Airbnb", location: "San Francisco", salary: "$115k", category: "Hybrid" }
+      ];
+      localStorage.setItem('jobs', JSON.stringify(sampleJobs));
+    }
+    if (!localStorage.getItem('savedJobs')) localStorage.setItem('savedJobs', JSON.stringify([]));
+    if (!localStorage.getItem('applications')) localStorage.setItem('applications', JSON.stringify([]));
+    if (!localStorage.getItem('userProfile')) {
+      localStorage.setItem('userProfile', JSON.stringify({ name: " User", role: "", skills: "" }));
+    }
+    if (!localStorage.getItem('skillScores')) {
+      localStorage.setItem('skillScores', JSON.stringify({ "JavaScript": 0, "React": 0, "CSS": 0}));
+    }
+  }
+
+  // helper functions
+  function showToast(msg, isSuccess = true) {
+    const toast = document.getElementById('toastMessage');
+    toast.textContent = msg;
+    toast.style.backgroundColor = isSuccess ? '#10b981' : '#ef4444';
+    toast.style.display = 'block';
+    setTimeout(() => toast.style.display = 'none', 2500);
+  }
+
+  let currentView = 'home';
+  function renderView(view) {
+  const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
+
+  // ✅ PROFILE LOCK LOGIC
+   if (profile.isComplete !== true && view !== 'profile'){
+    showToast("⚠️ Complete your profile first", false);
+    view = 'profile';
+  }
+
+  currentView = view;
+
+  if (view === 'home') renderHome();
+  else if (view === 'jobs') renderJobs();
+  else if (view === 'saved') renderSavedJobs();
+  else if (view === 'applications') renderApplicationsTracker();
+  else if (view === 'resume') renderResumeBuilder();
+  else if (view === 'tests') renderMockTests();
+  else if (view === 'insights') renderCareerInsights();
+  else if (view === 'profile') renderProfileSettings();
+
+  document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+  const activeLink = document.querySelector(`.sidebar-nav a[data-view="${view}"]`);
+  if (activeLink) activeLink.classList.add('active');
+}
+  // ----------------------------- HOME -----------------------------
+  function renderHome() {
+    const profile = JSON.parse(localStorage.getItem('userProfile'));
+    const saved = JSON.parse(localStorage.getItem('savedJobs')).length;
+    const applications = JSON.parse(localStorage.getItem('applications')).length;
+    const skillsCount = profile.skills ? profile.skills.split(',').length : 0;
+
+    let completion = 0;
+if (profile.name && profile.name !== " User") completion += 25;
+if (profile.role) completion += 25;
+if (profile.skills) completion += 25;
+if (localStorage.getItem('resumeData')) completion += 25;
+    const html = `
+      <div class="card" style="margin-bottom:2rem">
+        <h2> Welcome back, ${profile.name}</h2>
+        <div style="margin-top:1rem">Profile Completion<div class="progress-bar"><div class="progress-fill" style="width:${completion}%"></div></div></div>
+        
+      </div>
+      <div class="grid-2">
+        <div class="stat-card"><i class="fas fa-bookmark"></i><h3>${saved}</h3><p>Saved Jobs</p></div>
+        <div class="stat-card"><i class="fas fa-paper-plane"></i><h3>${applications}</h3><p>Applications Sent</p></div>
+        <div class="stat-card"><i class="fas fa-code"></i><h3>${skillsCount}</h3><p>Skills Added</p></div>
+        <div class="stat-card"><i class="fas fa-chart-line"></i><h3> Active</h3><p>Job Seeker Pro</p></div>
+      </div>
+    `;
+    document.getElementById('mainContent').innerHTML = html;
+  }
+
+  // ----------------------------- FIND JOBS with filter/sort -------------------
+  function renderJobs() {
+    let jobs = JSON.parse(localStorage.getItem('postedJobs')) || [];
+    const savedIds = JSON.parse(localStorage.getItem('savedJobs'));
+    let filteredJobs = [...jobs];
+    let searchTerm = '', locationFilter = '', sortBy = 'relevance';
+    const renderJobList = () => {
+      let data = [...filteredJobs];
+      if (searchTerm) data = data.filter(j => j.title.toLowerCase().includes(searchTerm) || j.company.toLowerCase().includes(searchTerm));
+      if (locationFilter && locationFilter !== 'all') data = data.filter(j => j.category === locationFilter);
+      if (sortBy === 'match') data.sort((a,b) => b.match - a.match);
+      else if (sortBy === 'salary') data.sort((a,b) => parseInt(b.salary.replace(/[^0-9]/g,'')) - parseInt(a.salary.replace(/[^0-9]/g,'')));
+      document.getElementById('jobsContainer').innerHTML = data.map(job => `
+        <div class="job-card">
+          <div style="display:flex; justify-content:space-between;"> <span class="job-title">${job.title}</span>
+${job.match ? `<span class="match-score">${job.match}% Match</span>` : ''}</div>
+          <div style="color:#2563eb; margin:5px 0">${job.company}</div>
+          <div> ${job.location} |  ${job.salary}</div>
+          <div style="display:flex; gap:8px; margin-top:12px;">
+            <button class="btn-sm apply-now" data-id="${job.id}">Apply</button>
+            <button class="btn-sm save-job-btn" data-id="${job.id}">${savedIds.includes(job.id) ? 'Saved' : 'Save'}</button>
+          </div>
+        </div>
+      `).join('');
+      attachJobEvents();
+    };
+    const html = `
+      <div style="margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
+        <input type="text" id="jobSearch" placeholder="Search jobs..." style="flex:1; padding:10px; border-radius:40px; border:1px solid #ccc;">
+        <select id="locationFilter" class="filter-select"><option value="all">All Locations</option><option value="Remote">Remote</option><option value="Hybrid">Hybrid</option><option value="Onsite">Onsite</option></select>
+        <select id="sortBy"><option value="relevance">Sort by Relevance</option><option value="match">Match %</option><option value="salary">Salary</option></select>
+      </div>
+      <div id="jobsContainer" class="jobs-grid"></div>
+    `;
+    document.getElementById('mainContent').innerHTML = html;
+    document.getElementById('jobSearch').addEventListener('input', (e) => { searchTerm = e.target.value.toLowerCase(); renderJobList(); });
+    document.getElementById('locationFilter').addEventListener('change', (e) => { locationFilter = e.target.value; renderJobList(); });
+    document.getElementById('sortBy').addEventListener('change', (e) => { sortBy = e.target.value; renderJobList(); });
+    renderJobList();
+  }
+
+   
+  function attachJobEvents() {
+
+  document.querySelectorAll('.apply-now').forEach(btn => {
+    btn.addEventListener('click', () => {
+
+      const jobId = parseInt(btn.dataset.id);
+      const jobs = JSON.parse(localStorage.getItem('postedJobs')) || [];
+      const job = jobs.find(j => j.id === jobId);
+
+      let apps = JSON.parse(localStorage.getItem('applications')) || [];
+
+      if (apps.some(a => a.jobId === jobId)) {
+        showToast("Already applied", false);
+        return;
+      }
+
+      const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
+
+      apps.push({
+        id: Date.now(),
+        jobId: jobId,
+        jobTitle: job.title,
+        company: job.company,
+        status: "Applied"
+      });
+
+      localStorage.setItem('applications', JSON.stringify(apps));
+
+      let applicants = JSON.parse(localStorage.getItem('applicants')) || [];
+
+      applicants.push({
+        id: Date.now(),
+        jobId: jobId,
+        jobTitle: job.title,
+        company: job.company,
+        name: profile.name || "Candidate",
+        email: profile.email || "",
+        skills: profile.skills || "",
+        location: profile.location || "",
+        projects: profile.projects || "",
+        status: "Applied"
+      });
+
+      localStorage.setItem('applicants', JSON.stringify(applicants));
+
+      showToast(`Applied to ${job.title}`);
+      renderView(currentView);
+    });
+  });
+
+
+  document.querySelectorAll('.save-job-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+
+      const jobId = parseInt(btn.dataset.id);
+      let saved = JSON.parse(localStorage.getItem('savedJobs')) || [];
+
+      if (saved.includes(jobId)) {
+        saved = saved.filter(id => id !== jobId);
+        showToast("Removed from saved");
+      } else {
+        saved.push(jobId);
+        showToast("Job saved");
+      }
+
+      localStorage.setItem('savedJobs', JSON.stringify(saved));
+      renderView(currentView);
+    });
+  });
+
+}
+      
+  document.querySelectorAll('.save-job-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const jobId = parseInt(btn.dataset.id);
+      let saved = JSON.parse(localStorage.getItem('savedJobs')) || [];
+
+      if (saved.includes(jobId)) {
+        saved = saved.filter(id => id !== jobId);
+      } else {
+        saved.push(jobId);
+      }
+
+      localStorage.setItem('savedJobs', JSON.stringify(saved));
+      renderView(currentView);
+      showToast(saved.includes(jobId) ? "Job saved" : "Removed from saved");
+    });
+  });
+
+
+  // saved jobs
+  function renderSavedJobs() {
+    const allJobs = JSON.parse(localStorage.getItem('postedJobs')) || [];
+    const savedIds = JSON.parse(localStorage.getItem('savedJobs'));
+    const savedJobs = allJobs.filter(j => savedIds.includes(j.id));
+    if (savedJobs.length === 0) {
+      document.getElementById('mainContent').innerHTML = `<div class="card" style="text-align:center"><i class="fas fa-bookmark fa-2x"></i><p>No saved jobs yet. Go to Find Jobs and save!</p></div>`;
+      return;
+    }
+    const html = `<div class="jobs-grid">${savedJobs.map(job => `
+      <div class="job-card"><div class="job-title">${job.title}</div><div>${job.company}</div><div>${job.location}</div><button class="btn-sm remove-saved" data-id="${job.id}" style="margin-top:10px;">Remove</button></div>
+    `).join('')}</div>`;
+    document.getElementById('mainContent').innerHTML = html;
+    document.querySelectorAll('.remove-saved').forEach(btn => {
+      btn.addEventListener('click', () => {
+        let saved = JSON.parse(localStorage.getItem('savedJobs'));
+        saved = saved.filter(id => id !== parseInt(btn.dataset.id));
+        localStorage.setItem('savedJobs', JSON.stringify(saved));
+        renderSavedJobs();
+        showToast("Removed from saved");
+      });
+    });
+  }
+
+  // Kanban applications
+  function renderApplicationsTracker() {
+    let applications = JSON.parse(localStorage.getItem('applications'));
+    const statuses = ["Applied", "Shortlisted", "Interview", "Rejected", "Selected"];
+    const grouped = {};
+    statuses.forEach(s => grouped[s] = applications.filter(app => app.status === s));
+    const boardHtml = `<div class="kanban-board">${statuses.map(status => `
+      <div class="kanban-column"><h4>${status}</h4>${grouped[status].map(app => `<div class="kanban-item"><strong>${app.jobTitle}</strong><br>${app.company}<div style="margin-top:5px;"> <div class="kanban-item">
+  <strong>${app.jobTitle}</strong><br>
+  ${app.company}
+  ${app.interviewDetails ? `
+  <div style="color:#2563eb; font-size:12px;">
+    📅 Interview: ${app.interviewDetails}
+  </div>
+` : ""}
+  <div style="margin-top:5px;">
+    <span style="font-size:12px; color:#64748b;">
+      Waiting for recruiter...
+    </span>
+  </div>
+</div> </button></div></div>`).join('') || '<div class="kanban-item">—</div>'}</div>
+    `).join('')}</div>`;
+    document.getElementById('mainContent').innerHTML = boardHtml;
+    document.querySelectorAll('.move-status').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const jobId = parseInt(btn.dataset.jobid);
+        const newStatus = btn.dataset.newstatus;
+        let apps = JSON.parse(localStorage.getItem('applications'));
+        const appIndex = apps.findIndex(a => a.jobId === jobId);
+        if (appIndex !== -1) apps[appIndex].status = newStatus;
+        localStorage.setItem('applications', JSON.stringify(apps));
+        renderApplicationsTracker();
+        showToast(`Status updated to ${newStatus}`);
+      });
+    });
+  }
+  function getNextStatus(current) {
+    const flow = ["Applied","Shortlisted","Interview","Selected","Rejected"];
+    let idx = flow.indexOf(current);
+    if (idx === flow.length-1) return flow[idx];
+    return flow[idx+1];
+  }
+
+  // AI Resume Builder
+      function renderResumeBuilder() {
+  const html = `
+    <div class="card">
+      <h3>Create Your Resume</h3>
+      <input id="resName" placeholder="Full Name" style="width:100%; margin:5px 0;">
+      <input id="resEmail" placeholder="Email" style="width:100%; margin:5px 0;">
+      <input id="resRole" placeholder="Role" style="width:100%; margin:5px 0;">
+      <textarea id="resProf" placeholder="Professional Summary" style="width:100%; margin:5px 0;"></textarea>
+      <textarea id="resEducation" placeholder="Education" style="width:100%; margin:5px 0;"></textarea>
+      <textarea id="resSkills" placeholder="Skills" style="width:100%; margin:5px 0;"></textarea>
+    
+      <textarea id="resExp" placeholder="Experience" style="width:100%; margin:5px 0;"></textarea>
+      <button id="generateResume" class="btn-primary">Generate Resume</button><br><br><button id="downloadBtn" class="btn-primary" style="margin-top:10px;">Download Resume</button>
+    </div>
+    <div id="resumePreview"></div>
+  `;
+
+  document.getElementById('mainContent').innerHTML = html;
+
+  document.getElementById('generateResume').addEventListener('click', () => {
+    const data = {
+      name: resName.value,
+      email: resEmail.value,
+      role: resRole.value,
+      professionalsummary: resProf.value,
+      education: resEducation.value,
+      skills: resSkills.value,
+      exp: resExp.value
+    };
+
+    localStorage.setItem('resumeData', JSON.stringify(data));
+
+    document.getElementById('resumePreview').innerHTML = `
+  <div class="card" style="max-width:700px; margin-top:20px;">
+    <h2>${data.name}</h2>
+    <p>${data.email}</p>
+    <hr>
+    <h4>Summary</h4>
+    <p>${data.professionalsummary}</p>
+    <h4>Skills</h4>
+    <p>${data.skills}</p>
+    <h4>Education</h4>
+    <p>${data.education}</p>
+    <h4>Experience</h4>
+    <p>${data.exp}</p>
+  </div>
+`;
+
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "text/plain" });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = "resume.txt";
+      a.click();
+    });
+  });
+}
+  // Mock tests external links
+  function renderMockTests() {
+    const tests = [
+      { name: "Coding Tests", icon: "fa-code", url: "https://hackerrank.com", desc: "Practice DSA & Algorithms" },
+      { name: "Aptitude", icon: "fa-calculator", url: "https://indiabix.com", desc: "Quantitative & Logical" },
+      { name: "Technical MCQs", icon: "fa-laptop-code", url: "https://leetcode.com", desc: "Core CS fundamentals" }
+    ];
+    const html = `<div class="grid-2">${tests.map(t => `<div class="card" style="text-align:center"><i class="fab ${t.icon} fa-2x" style="color:#2563eb"></i><h3>${t.name}</h3><p>${t.desc}</p><a href="${t.url}" target="_blank" class="btn-primary" style="display:inline-block; margin-top:10px;">Start Test →</a></div>`).join('')}</div>`;
+    document.getElementById('mainContent').innerHTML = html;
+  }
+  
+  // Insights
+    function renderCareerInsights() {
+  const skills = [
+    "React", "Node.js", "AI/ML", "Cloud", "Cybersecurity",
+    "Data Science", "DevOps", "Blockchain"
+  ];
+
+  const html = `
+    <div class="grid-2">
+      ${skills.map(skill => `
+        <div class="card">
+          <h3>${skill}</h3>
+          <p>High demand skill in 2026</p>
+        </div>
+      `).join('')}
+    </div>
+    <div class="card">
+      <h3>Career Growth Path</h3>
+      <p>Junior → Mid → Senior → Lead → Architect</p>
+    </div>
+    <div class="card">
+      <h3>Salary Trends</h3>
+      <p>₹6 LPA → ₹40 LPA depending on skill & experience</p>
+    </div>
+  `;
+
+  document.getElementById('mainContent').innerHTML = html;
+}
+  // Profile settings
+    function renderProfileSettings() {
+  let profile = JSON.parse(localStorage.getItem('userProfile')) || {};
+
+  const html = `
+  <div class="card" style="max-width:900px; margin:auto;">
+    <h2 style="margin-bottom:1rem;">Complete Your Profile</h2>
+
+    <h4>Basic Details</h4>
+    <input id="name" placeholder="Full Name" value="${profile.name || ''}" class="input-field"><br><br>
+    <input id="email" placeholder="Email" value="${profile.email || ''}" class="input-field"><br><br>
+    <input id="phone" value="${profile.phone || ''}" placeholder="Phone Number" class="input-field"><br><br>
+    <input id="location"  value="${profile.location || ''}" placeholder="Location" class="input-field"><br><br>
+    <input id="dob" value="${profile.dob || ''}" type="date" class="input-field"><br><br>
+
+    <select id="gender" class="input-field">
+      <option value="">Select Gender</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select><br><br>
+
+    <h4>Career Preferences</h4>
+    <input id="jobType" placeholder="Preferred Job Type (Full-time/Intern)" class="input-field"><br><br>
+    <input id="availability" placeholder="Availability (Immediate/1 Month)" class="input-field"><br><br>
+    <input id="preferredLocation" placeholder="Preferred Location" class="input-field"><br><br>
+
+    <h4>Education</h4>
+    <input id="tenth" placeholder="10th %" class="input-field"><br><br>
+    <input id="twelfth" placeholder="12th %" class="input-field"><br><br>
+    <input id="degree" placeholder="Degree" class="input-field"><br><br>
+
+    <h4>Skills & Experience</h4>
+    <textarea id="skills" placeholder="Key Skills"></textarea><br><br>
+    <textarea id="projects" placeholder="Projects"></textarea><br><br>
+    <textarea id="internships" placeholder="Internships"></textarea><br><br>
+
+    <h4>Resume</h4>
+    <input type="file" id="resume"><br><br>
+
+    <button id="saveProfileBtn" class="btn-primary">Save Profile</button>
+  </div>
+  `;
+
+  document.getElementById('mainContent').innerHTML = html;
+
+  document.getElementById('saveProfileBtn').addEventListener('click', () => {
+
+    const newProfile = {
+  name: document.getElementById('name').value,
+  email: document.getElementById('email').value,
+  phone: document.getElementById('phone').value,
+  location: document.getElementById('location').value,
+  dob: document.getElementById('dob').value,
+  gender: document.getElementById('gender').value,
+
+  jobType: document.getElementById('jobType').value,
+  availability: document.getElementById('availability').value,
+  preferredLocation: document.getElementById('preferredLocation').value,
+
+  tenth: document.getElementById('tenth').value,
+  twelfth: document.getElementById('twelfth').value,
+  degree: document.getElementById('degree').value,
+
+  skills: document.getElementById('skills').value,
+  projects: document.getElementById('projects').value,
+  internships: document.getElementById('internships').value,
+
+  isComplete: true
+};
+
+    localStorage.setItem('userProfile', JSON.stringify(newProfile));
+
+    showToast("✅ Profile saved");
+    renderView('home');
+  });
+}
+
+  // logout
+  function logout() {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('currentUserEmail');
+    window.location.href = "index.html";
+}
+  
+
+  // sidebar & dark mode
+  function initDashboard() {
+    initDataStorage();
+   const profile = JSON.parse(localStorage.getItem('userProfile'));
+    renderView('home');
+    const btns = document.querySelectorAll('.sidebar-nav a[data-view]');
+    btns.forEach(btn => btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const view = btn.dataset.view;
+      if (view) renderView(view);
+      if (window.innerWidth <= 820) document.getElementById('sidebar').classList.remove('open');
+    }));
+    document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); logout(); });
+    // dark mode
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    if (darkMode) document.body.classList.add('dark');
+    document.getElementById('darkModeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+    });
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    mobileBtn.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+  }
+
+  if (checkAuth()) {
+    initDashboard();
+  }
+</script>
+</body>
+</html>

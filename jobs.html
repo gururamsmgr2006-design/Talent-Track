@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TalentTrack – Find Jobs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="jobs.css">
+</head>
+<body>
+
+  <!-- Sticky Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">TalentTrack</div>
+      <ul class="nav-links" id="navLinks">
+       <li><a href="index.html">Home</a></li>
+        <li><a href="jobs.html" class="active">Jobs</a></li>
+        <li><a href="internships.html">Internships</a></li>
+        <li><a href="companies.html">Companies</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="help.html">Help</a></li>
+        <li><a href="feedback.html">Feedback</a></li>
+        <li><a href="login.html" class="login-link">Login</a></li>
+        <li><a href="signup.html" class="signup-link">Sign Up</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Page Header -->
+    <section class="page-header">
+      <h1>Find Jobs</h1>
+      <p>Explore thousands of real opportunities from top companies worldwide</p>
+    </section>
+
+    <!-- Search & Filter Section -->
+    <section class="filters-section">
+      <div class="filters-container">
+        <div class="search-input-group">
+          <i class="fas fa-search"></i>
+          <input type="text" id="searchKeyword" placeholder="Job title, company, or keywords">
+        </div>
+        <div class="filter-row">
+          <div class="filter-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <input type="text" id="locationFilter" placeholder="Location (e.g., Remote, New York)">
+          </div>
+          <div class="filter-item">
+            <i class="fas fa-tag"></i>
+            <select id="categoryFilter">
+              <option value="">All Categories</option>
+              <option value="software">Software & IT</option>
+              <option value="finance">Finance & Banking</option>
+              <option value="marketing">Marketing & Sales</option>
+              <option value="design">Design & Creative</option>
+              <option value="data">Data & Analytics</option>
+              <option value="project">Project Management</option>
+            </select>
+          </div>
+          <div class="filter-item">
+            <i class="fas fa-briefcase"></i>
+            <select id="jobTypeFilter">
+              <option value="">All Types</option>
+              <option value="remote">Remote</option>
+              <option value="fulltime">Full-time</option>
+              <option value="internship">Internship</option>
+            </select>
+          </div>
+          <button id="resetFiltersBtn" class="reset-btn">Reset Filters</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Job Listing Section -->
+    <section class="jobs-listing">
+      <div class="jobs-header-info">
+        <span id="jobsCount">0</span> jobs found
+      </div>
+      <div id="jobsGrid" class="jobs-grid">
+        <div class="loading-state"><i class="fas fa-spinner fa-pulse"></i> Loading jobs...</div>
+      </div>
+      <div class="load-more-container">
+        <button id="loadMoreBtn" class="load-more-btn">Load More Jobs</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Simple Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>© 2025 TalentTrack — Your career companion</p>
+    </div>
+  </footer>
+
+  <script src="jobs.js"></script>
+</body>
+</html>

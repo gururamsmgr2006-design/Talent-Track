@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>TalentTrack | Find Your Dream Job & Internship</title>
+  <!-- Google Fonts + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div id="loader">
+  <div class="spinner"></div>
+</div>
+  <!-- STICKY NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">TalentTrack</div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="jobs.html">Jobs</a></li>
+        <li><a href="internships.html">Internships</a></li>
+        <li><a href="companies.html">Companies</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="help.html">Help</a></li>
+        <li><a href="feedback.html">Feedback</a></li>
+        <li><a href="login.html" class="login-link">Login</a></li>
+        <li><a href="signup.html" class="signup-link">Sign Up</a></li>
+        
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Find Your Dream Job <span>& Internship Today</span></h1>
+        <p>Explore real opportunities from top companies — remote, hybrid, on-site roles curated for you.</p>
+        <div class="hero-buttons">
+          <button class="btn-primary" id="browseJobsBtn"><i class="fas fa-search"></i> Browse Jobs</button>
+          <button class="btn-secondary" id="exploreInternshipsBtn"><i class="fas fa-graduation-cap"></i> Explore Internships</button>
+        </div>
+      </div>
+      
+    </section>
+
+    <!-- SMART SEARCH SECTION -->
+    <section class="search-section">
+      <div class="search-container">
+        <div class="search-bar">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="jobSearchInput" placeholder="Search jobs by title, company, or keyword...">
+        </div>
+        <div class="filter-chips" id="filterChips">
+          <span data-category="remote">Remote</span>
+          <span data-category="mnc">MNC</span>
+          <span data-category="startup">Startup</span>
+          <span data-category="analytics">Analytics</span>
+          <span data-category="banking">Banking & Finance</span>
+          <span data-category="engineering">Engineering</span>
+          <span data-category="project">Project Management</span>
+          <span data-category="software">Software & IT</span>
+          <span data-category="sales">Sales</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED JOBS SECTION -->
+    <section class="featured-jobs" id="featuredJobsSection">
+      <div class="section-header">
+        <h2> Featured Jobs</h2>
+        <p>Handpicked opportunities just for you</p>
+      </div>
+      <div class="jobs-grid" id="jobsGrid">
+        <!-- dynamic job cards injected -->
+        <div class="loading-spinner"><i class="fas fa-spinner fa-pulse"></i> Loading fresh jobs...</div>
+      </div>
+      <div style="text-align:center; margin-top:20px;">
+  <button id="viewMoreJobsBtn" class="btn-primary">View More Jobs</button>
+</div>
+    </section>
+
+    <!-- INTERNSHIP SECTION -->
+    <section class="internship-section" id="internshipSection">
+      <div class="section-header">
+        <h2>Best Internships</h2>
+        <p>Launch your career with real-world experience</p>
+      </div>
+      <div class="internships-grid" id="internshipsGrid">
+        <!-- static + dynamic fallback show, but we present static sample curated -->
+      </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features">
+      <div class="features-grid">
+        <div class="feature-card"><i class="fas fa-robot"></i><h3>Smart Job Matching</h3><p>AI-curated roles based on your profile.</p></div>
+        <div class="feature-card"><i class="fas fa-shield-alt"></i><h3>Verified Listings</h3><p>100% authentic opportunities from trusted firms.</p></div>
+        <div class="feature-card"><i class="fas fa-chalkboard-user"></i><h3>Career Guidance</h3><p>Resume reviews & roadmap sessions.</p></div>
+        <div class="feature-card"><i class="fas fa-file-alt"></i><h3>Resume Tips</h3><p>ATS-friendly templates & expert advice.</p></div>
+        <div class="feature-card"><i class="fas fa-bolt"></i><h3>Fast Applications</h3><p>One-click apply with enhanced tracking.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <h4>TalentTrack</h4>
+        <p>Bridge to your ambition.</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="about.html">About Us</a>
+        <a href="jobs.html">Careers</a>
+        <a href="#">Press</a>
+        <a href="help.html">Contact</a>
+      </div>
+     
+      <div class="footer-col rating-col">
+        <h4>Rate Us ⭐</h4>
+        <div class="rating-stars" id="ratingStars">
+          <i class="far fa-star" data-rating="1"></i>
+          <i class="far fa-star" data-rating="2"></i>
+          <i class="far fa-star" data-rating="3"></i>
+          <i class="far fa-star" data-rating="4"></i>
+          <i class="far fa-star" data-rating="5"></i>
+        </div>
+        <p id="ratingMessage" class="rating-message">Love TalentTrack? Leave a review!</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 TalentTrack — Empowering careers globally.</div>
+  </footer>
+
+  <!-- CHATBOT FLOATING WIDGET -->
+  <div class="chatbot-container" id="chatbotContainer">
+    <div class="chatbot-icon" id="chatbotIcon">
+      <i class="fas fa-comment-dots"></i>
+    </div>
+    <div class="chat-window" id="chatWindow">
+      <div class="chat-header">
+        <span><i class="fas fa-robot"></i> CareerGuide AI</span>
+        <button id="closeChat"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="bot-msg">👋 Hi! I'm TalentTrack's career assistant. Ask me about jobs, internships, resume tips, or navigating the site!</div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="Type your question...">
+        <button id="sendChatMsg"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>
