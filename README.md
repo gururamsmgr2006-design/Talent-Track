@@ -24,6 +24,6 @@ This project was built as part of my learning journey in frontend development to
 - Improving UI/UX design
 - Writing cleaner and more organized code
 
-## 🔗 Author
-Your Name  
-GitHub: https://github.com/your-username
+Author,
+GURU RAM S  
+
